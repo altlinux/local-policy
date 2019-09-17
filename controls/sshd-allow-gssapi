@@ -1,0 +1,35 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/openssh/sshd_config
+
+new_subst disabled \
+	'^GSSAPIAuthentication[[:space:]]+no' \
+	's/^#\?\(GSSAPIAuthentication\)[[:space:]]\+.*/\1 no/'
+
+new_subst enabled \
+	'^GSSAPIAuthentication[[:space:]]+yes' \
+	's/^#\?\(GSSAPIAuthentication\)[[:space:]]\+.*/\1 yes/'
+
+new_subst default \
+	'^#GSSAPIAuthentication[[:space:]]+no' \
+	's/^#\?\(GSSAPIAuthentication\)[[:space:]]\+.*/#\1 no/'
+
+
+new_help disabled 'Disable GSSAPI authentication (Single Sign-On feature)'
+new_help enabled 'Use GSSAPI authentication (Single Sign-On feature)'
+new_help default 'Disable GSSAPI authentication (Single Sign-On feature)'
+
+new_summary 'GSSAPI authentication mechanism in SSHD'
+
+case "$*" in
+*)
+	control_subst "${CONFIG}" "$*" || exit 1
+	# Don't send any message if SIGHUP to sshd failed because
+	# there might be no sshd instance at the moment and pgrep
+	# will be unable to find any process.
+	kill -HUP `pgrep -f "sshd -D"` &> /dev/null
+	;;
+esac
+
