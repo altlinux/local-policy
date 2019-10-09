@@ -1,0 +1,83 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/openldap/openldap.conf
+
+new_subst allow \
+	'^sasl_nocanon[[:space:]]+no' \
+	's/^#\?\(sasl_nocanon\)[[:space:]]\+.*/\1 no/'
+
+new_subst deny \
+	'^sasl_nocanon[[:space:]]+yes' \
+	's/^#\?\(sasll_nocanon\)[[:space:]]\+.*/\1 yes/'
+
+new_subst default \
+	'^#sasl_nocanon[[:space:]]+no' \
+	's/^#\?\(sasl_nocanon\)[[:space:]]\+.*/#\1 no/'
+
+new_help allow 'Allow reverse DNS lookup functionality for LDAP queries'
+new_help deny 'Deny reverse DNS lookup functionality for LDAP queries'
+new_help default 'Allow reverse DNS lookup functionality for LDAP queries'
+
+new_summary 'Allow reverse DNS lookup functionality for LDAP queries'
+
+CONTROL_SED_OPTIONS=
+
+CONTROL_DEBUG=${CONTROL_DEBUG:-0}
+SUFFIX=${SUFFIX:-.bak}
+
+if test "${CONTROL_DEBUG}" == "1"; then
+	CONTROL_SED_OPTIONS="${CONTROL_SED_OPTIONS} --debug"
+fi
+
+sed_script() {
+	script="${1}"
+	file="${2}"
+
+	/usr/bin/env \
+		LANG=C \
+		LC_ALL=C \
+		LC_CTYPE=C \
+		sed -i${SUFFIX} ${CONTROL_SED_OPTIONS} -e "${script}" "${file}"
+	return $?
+}
+
+mkdir -p '/etc/openldap'
+touch "${CONFIG}"
+
+case "$*" in
+status|'')
+	SASL_NOCANON=`sed -n 's/^sasl_nocanon[ \t]*\(.*\)/\1/p' "${CONFIG}"`
+	SASL_NOCANON=${SASL_NOCANON:-unknown}
+	if test \( "${SASL_NOCANON}" == "yes" \) -o \( "${SASL_NOCANON}" == "true" \) -o \( "${SASL_NOCANON}" == "on" \); then
+		STATUS=deny
+		echo "deny"
+	elif test \( "${SASL_NOCANON}" == "no" \) -o \( "${SASL_NOCANON}" == "false" \) -o \( "${SASL_NOCANON}" == "off" \); then
+		STATUS=allow
+		echo "allow"
+	else
+		STATUS=unknown
+		echo "unknown"
+	fi
+	;;
+allow)
+	echo "allow"
+	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon no" >> "${CONFIG}"; }
+	sed_script 's/^sasl_nocanon.*/sasl_nocanon no/' "${CONFIG}" || exit 1
+	;;
+deny)
+	echo "deny"
+	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon yes" >> "${CONFIG}"; }
+	sed_script 's/^sasl_nocanon.*/sasl_nocanon yes/' "${CONFIG}" || exit 1
+	;;
+default)
+	echo "allow"
+	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon no" >> "${CONFIG}"; }
+	sed_script 's/^sasl_nocanon.*/sasl_nocanon no/' "${CONFIG}" || exit 1
+	;;
+*)
+	control_subst "${CONFIG}" "$*" || exit 1
+	;;
+esac
+
