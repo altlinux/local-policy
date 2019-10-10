@@ -2,7 +2,7 @@
 
 . /etc/control.d/functions
 
-CONFIG=/etc/openldap/openldap.conf
+CONFIG=/etc/openldap/ldap.conf
 
 new_subst allow \
 	'^sasl_nocanon[[:space:]]+no' \
@@ -50,29 +50,23 @@ case "$*" in
 status|'')
 	SASL_NOCANON=`sed -n 's/^sasl_nocanon[ \t]*\(.*\)/\1/p' "${CONFIG}"`
 	SASL_NOCANON=${SASL_NOCANON:-unknown}
+	STATUS="unknown"
 	if test \( "${SASL_NOCANON}" == "yes" \) -o \( "${SASL_NOCANON}" == "true" \) -o \( "${SASL_NOCANON}" == "on" \); then
-		STATUS=deny
-		echo "deny"
+		STATUS="deny"
 	elif test \( "${SASL_NOCANON}" == "no" \) -o \( "${SASL_NOCANON}" == "false" \) -o \( "${SASL_NOCANON}" == "off" \); then
-		STATUS=allow
-		echo "allow"
-	else
-		STATUS=unknown
-		echo "unknown"
+		STATUS="allow"
 	fi
+	echo "${STATUS}"
 	;;
 allow)
-	echo "allow"
 	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon no" >> "${CONFIG}"; }
 	sed_script 's/^sasl_nocanon.*/sasl_nocanon no/' "${CONFIG}" || exit 1
 	;;
 deny)
-	echo "deny"
 	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon yes" >> "${CONFIG}"; }
 	sed_script 's/^sasl_nocanon.*/sasl_nocanon yes/' "${CONFIG}" || exit 1
 	;;
 default)
-	echo "allow"
 	grep -q -- "^sasl_nocanon" "${CONFIG}"  || { echo "sasl_nocanon no" >> "${CONFIG}"; }
 	sed_script 's/^sasl_nocanon.*/sasl_nocanon no/' "${CONFIG}" || exit 1
 	;;
