@@ -1,0 +1,79 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/openldap/ldap.conf
+
+new_help default 'The default value is demand'
+new_help never 'Do not try to request or check any certificate'
+new_help allow 'Continue to use session in case no or bad server certificate is provided'
+new_help try 'Drop session only if bad certificate is provided'
+new_help demand 'Establish session only if good server certificate is provided'
+
+new_summary 'TLS certificate check behavior'
+
+CONTROL_SED_OPTIONS=
+
+CONTROL_DEBUG=${CONTROL_DEBUG:-0}
+SUFFIX=${SUFFIX:-.bak}
+
+if test "${CONTROL_DEBUG}" == "1"; then
+	CONTROL_SED_OPTIONS="${CONTROL_SED_OPTIONS} --debug"
+fi
+
+sed_script() {
+	script="${1}"
+	file="${2}"
+
+	/usr/bin/env \
+		LANG=C \
+		LC_ALL=C \
+		LC_CTYPE=C \
+		sed -i${SUFFIX} ${CONTROL_SED_OPTIONS} -e "${script}" "${file}"
+	return $?
+}
+
+mkdir -p '/etc/openldap'
+touch "${CONFIG}"
+
+case "$*" in
+	status|'')
+		TLS_REQCERT=`sed -n 's/^tls_reqcert[ \t]*\(.*\)/\1/p' "${CONFIG}"`
+		TLS_REQCERT=${TLS_REQCERT:-unknown}
+		STATUS=unknown
+		if test "${TLS_REQCERT}" == "never"; then
+			STATUS=never
+		elif test "${TLS_REQCERT}" == "allow"; then
+			STATUS=allow
+		elif test "${TLS_REQCERT}" == "try"; then
+			STATUS=try
+		elif test "${TLS_REQCERT}" == "demand" -o "${TLS_REQCERT}" == "hard"; then
+			STATUS=demand
+		fi
+		echo "${STATUS}"
+		;;
+	default)
+		grep -q -- "^tls_reqcert" "${CONFIG}" || { echo "tls_reqcert demand" >> "${CONFIG}"; }
+		sed_script 's/^tls_reqcert.*/tls_reqcert demand/' "${CONFIG}" || exit 1
+		;;
+	never)
+		grep -q -- "^tls_reqcert" "${CONFIG}" || { echo "tls_reqcert never" >> "${CONFIG}"; }
+		sed_script 's/^tls_reqcert.*/tls_reqcert never/' "${CONFIG}" || exit 1
+		;;
+	allow)
+		grep -q -- "^tls_reqcert" "${CONFIG}" || { echo "tls_reqcert allow" >> "${CONFIG}"; }
+		sed_script 's/^tls_reqcert.*/tls_reqcert allow/' "${CONFIG}" || exit 1
+		;;
+	try)
+		grep -q -- "^tls_reqcert" "${CONFIG}" || { echo "tls_reqcert try" >> "${CONFIG}"; }
+		sed_script 's/^tls_reqcert.*/tls_reqcert try/' "${CONFIG}" || exit 1
+		;;
+	demand|hard)
+		grep -q -- "^tls_reqcert" "${CONFIG}" || { echo "tls_reqcert demand" >> "${CONFIG}"; }
+		sed_script 's/^tls_reqcert.*/tls_reqcert demand/' "${CONFIG}" || exit 1
+		;;
+	*)
+		control_subst "${CONFIG}" "$*"
+		;;
+esac
+
