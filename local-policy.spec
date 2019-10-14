@@ -9,6 +9,8 @@ License: MIT
 Group: Other
 Url: http://git.altlinux.org
 
+BuildArch: noarch
+
 Requires: control
 
 Source0: %name-%version.tar
