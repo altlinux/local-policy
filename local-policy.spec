@@ -1,4 +1,4 @@
-%define _unpackages_files_terminate_build 1
+%define _unpackaged_files_terminate_build 1
 
 Name: local-policy
 Version: 0.0.4
