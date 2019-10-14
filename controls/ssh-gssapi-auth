@@ -1,0 +1,28 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/openssh/ssh_config
+
+
+new_summary 'GSSAPI authentication mechanism in SSH client'
+
+new_help disabled 'Disable GSSAPI authentication (Single Sign-On feature) in SSH client'
+new_help enabled 'Use GSSAPI authentication (Single Sign-On feature) in SSH client'
+new_help default 'Disable GSSAPI authentication (Single Sign-On feature) in SSH client'
+
+
+new_subst default \
+	'^[[:space:]]*#[[:space:]]*GSSAPIAuthentication[[:space:]]+(no|yes)$' \
+	's/\(GSSAPIAuthentication\)[[:space:]]\+.*/#\1 no/'
+
+new_subst disabled \
+	'^[[:space:]]*GSSAPIAuthentication[[:space:]]+no$' \
+	's/[[:space:]#]*\(GSSAPIAuthentication\)[[:space:]]\+.*/    \1 no/'
+
+new_subst enabled \
+	'^[[:space:]]*GSSAPIAuthentication[[:space:]]+yes$' \
+	's/[[:space:]#]*\(GSSAPIAuthentication\)[[:space:]]\+.*/    \1 yes/'
+
+control_subst "${CONFIG}" "$*" || exit 1
+
