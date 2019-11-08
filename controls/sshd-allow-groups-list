@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/openssh/sshd_config
+
+new_subst users \
+	'^#?AllowGroups[[:space:]]wheel[[:space:]]users$' \
+	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel users/'
+new_subst remote \
+	'^#?AllowGroups[[:space:]]wheel[[:space:]]remote$' \
+	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel remote/'
+new_subst wheelonly \
+	'^#?AllowGroups[[:space:]]wheel$' \
+	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel/'
+new_subst remoteonly \
+	'^#?AllowGroups[[:space:]]remote$' \
+	's/^\(#\?AllowGroups[[:space:]]\).*/\1remote/'
+
+new_help users 'Allow SSH Access to groups wheel and users'
+new_help remote 'Allow SSH Access to groups wheel and remote'
+new_help wheelonly 'Allow SSH Access to group wheel only'
+new_help remoteonly 'Allow SSH Access to group remote only'
+
+new_summary 'OpenSSH server list of allowed groups configuration'
+
+control_subst "$CONFIG" "$*"
