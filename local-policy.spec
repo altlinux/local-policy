@@ -1,10 +1,10 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.0.4
+Version: 0.0.5
 Release: alt1
 
-Summary: Local policies
+Summary: ALT Local policies
 License: MIT
 Group: Other
 Url: http://git.altlinux.org
@@ -16,28 +16,35 @@ Requires: control
 Source0: %name-%version.tar
 
 %description
-Local policies
+Local policies for ALT solutions based on Sisyphus
+includes additional control facilities.
 
 %prep
 %setup -q
 
 %install
-install -pD -m755 controls/sshd-gssapi-auth \
-	%buildroot%_sysconfdir/control.d/facilities/sshd-gssapi-auth
-install -pD -m755 controls/ssh-gssapi-auth \
-	%buildroot%_sysconfdir/control.d/facilities/ssh-gssapi-auth
-install -pD -m755 controls/ldap-reverse-dns-lookup \
-	%buildroot%_sysconfdir/control.d/facilities/ldap-reverse-dns-lookup
-install -pD -m755 controls/ldap-tls-cert-check \
-	%buildroot%_sysconfdir/control.d/facilities/ldap-tls-cert-check
+for i in sshd-gssapi-auth \
+         sshd-allow-groups-list \
+         ssh-gssapi-auth \
+         ldap-reverse-dns-lookup \
+         ldap-tls-cert-check
+do
+        install -pD -m755 "controls/$i" \
+                "%buildroot%_sysconfdir/control.d/facilities/$i"
+done
+
+%pre
+%_sbindir/groupadd -r -f remote 2> /dev/null ||:
 
 %files
-%_sysconfdir/control.d/facilities/sshd-gssapi-auth
-%_sysconfdir/control.d/facilities/ssh-gssapi-auth
-%_sysconfdir/control.d/facilities/ldap-reverse-dns-lookup
-%_sysconfdir/control.d/facilities/ldap-tls-cert-check
+%_sysconfdir/control.d/facilities/*
 
 %changelog
+* Fri Nov 08 2019 Evgeny Sinelnikov <sin@altlinux.org> 0.0.5-alt1
+- sshd-allow-groups-list added
+- sshd-gssapi-auth: remove kill -HUP from control
+- create group "remote" for sshd allow groups list policy
+
 * Mon Oct 14 2019 Igor Chudov <nir@altlinux.org> 0.0.4-alt1
 - ssh-gssapi-auth added
 - Package made architecture-independent
