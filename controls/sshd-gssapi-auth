@@ -23,13 +23,5 @@ new_help default 'Disable GSSAPI authentication (Single Sign-On feature)'
 
 new_summary 'GSSAPI authentication mechanism in SSHD'
 
-case "$*" in
-*)
-	control_subst "${CONFIG}" "$*" || exit 1
-	# Don't send any message if SIGHUP to sshd failed because
-	# there might be no sshd instance at the moment and pgrep
-	# will be unable to find any process.
-	kill -HUP `pgrep -f "sshd -D"` &> /dev/null
-	;;
-esac
+control_subst "${CONFIG}" "$*"
 
