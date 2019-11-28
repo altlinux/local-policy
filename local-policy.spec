@@ -1,11 +1,11 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.0.5
+Version: 0.1.0
 Release: alt1
 
 Summary: ALT Local policies
-License: MIT
+License: GPLv2+
 Group: Other
 Url: http://git.altlinux.org
 
@@ -17,7 +17,8 @@ Source0: %name-%version.tar
 
 %description
 Local policies for ALT solutions based on Sisyphus
-includes additional control facilities.
+includes additional control facilities and default policies
+templates in PReg format converted to XML.
 
 %prep
 %setup -q
@@ -33,13 +34,21 @@ do
                 "%buildroot%_sysconfdir/control.d/facilities/$i"
 done
 
+install -pD -m644 "default/local.xml" \
+        "%buildroot%_datadir/%name/default/local.xml"
+
 %pre
 %_sbindir/groupadd -r -f remote 2> /dev/null ||:
 
 %files
 %_sysconfdir/control.d/facilities/*
+%_datadir/%name/default/local.xml
 
 %changelog
+* Thu Nov 28 2019 Evgeny Sinelnikov <sin@altlinux.org> 0.1.0-alt1
+- Add default policies templates in PReg format converted to XML
+- Change license to GPLv2+
+
 * Fri Nov 08 2019 Evgeny Sinelnikov <sin@altlinux.org> 0.0.5-alt1
 - sshd-allow-groups-list added
 - sshd-gssapi-auth: remove kill -HUP from control
