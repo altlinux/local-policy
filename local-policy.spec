@@ -2,7 +2,7 @@
 
 Name: local-policy
 Version: 0.1.0
-Release: alt1
+Release: alt2
 
 Summary: ALT Local policies
 License: GPLv2+
@@ -45,6 +45,9 @@ install -pD -m644 "default/local.xml" \
 %_datadir/%name/default/local.xml
 
 %changelog
+* Fri Feb 07 2020 Ivan Savin <iv17@altlinux.org> 0.1.0-alt2
+- Add gpupdate to local.xml
+
 * Thu Nov 28 2019 Evgeny Sinelnikov <sin@altlinux.org> 0.1.0-alt1
 - Add default policies templates in PReg format converted to XML
 - Change license to GPLv2+
