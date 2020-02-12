@@ -2,12 +2,12 @@
 
 Name: local-policy
 Version: 0.1.0
-Release: alt2
+Release: alt3
 
 Summary: ALT Local policies
 License: GPLv2+
 Group: Other
-Url: http://git.altlinux.org
+Url: http://git.altlinux.org/people/sin/packages/local-policy.git
 
 BuildArch: noarch
 
@@ -45,6 +45,9 @@ install -pD -m644 "default/local.xml" \
 %_datadir/%name/default/local.xml
 
 %changelog
+* Wed Feb 12 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.1.0-alt3
+- Update project URL
+
 * Fri Feb 07 2020 Ivan Savin <iv17@altlinux.org> 0.1.0-alt2
 - Add gpupdate to local.xml
 
