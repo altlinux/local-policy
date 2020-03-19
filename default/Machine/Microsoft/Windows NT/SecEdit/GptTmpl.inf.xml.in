@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GptTmplInfFile>
+	<Section name="Unicode"/>
+	<Section name="Version"/>
+	<Section name="System Access"/>
+	<Section name="Kerberos Policy"/>
+	<Section name="System Log"/>
+	<Section name="Security Log"/>
+	<Section name="Application Log"/>
+	<Section name="Event Audit"/>
+	<Section name="Registry Values"/>
+	<Section name="Privilege Rights"/>
+	<Section name="Service General Setting"/>
+	<Section name="Registry Keys"/>
+	<Section name="File Security"/>
+	<Section name="Group Membership">
+		<Parameter>
+			<Key member_type="Memberof" user_id="TRUE">*S-1-5-21-@DOMAIN_SID@-513</Key>
+			<Value user_id="TRUE">*S-1-5-32-545</Value>
+		</Parameter>
+		<Parameter>
+			<Key member_type="Members" user_id="TRUE">*S-1-5-21-@DOMAIN_SID@-513</Key>
+			<Value user_id="TRUE"/>
+		</Parameter>
+		<Parameter>
+			<Key member_type="Memberof" user_id="TRUE">*S-1-5-21-@DOMAIN_SID@-512</Key>
+			<Value user_id="TRUE">*S-1-5-32-544</Value>
+		</Parameter>
+		<Parameter>
+			<Key member_type="Members" user_id="TRUE">*S-1-5-21-@DOMAIN_SID@-512</Key>
+			<Value user_id="TRUE"/>
+		</Parameter>
+	</Section>
+</GptTmplInfFile>
