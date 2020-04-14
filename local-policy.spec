@@ -1,8 +1,8 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.1.0
-Release: alt3
+Version: 0.2.0
+Release: alt1
 
 Summary: ALT Local policies
 License: GPLv2+
@@ -34,17 +34,21 @@ do
                 "%buildroot%_sysconfdir/control.d/facilities/$i"
 done
 
-install -pD -m644 "default/local.xml" \
-        "%buildroot%_datadir/%name/default/local.xml"
+mkdir -p "%buildroot%_datadir/%name"
+cp -r policies/* "%buildroot%_datadir/%name"
+ln -s "%_datadir/%name/server" "%buildroot%_datadir/%name/default"
 
 %pre
 %_sbindir/groupadd -r -f remote 2> /dev/null ||:
 
 %files
 %_sysconfdir/control.d/facilities/*
-%_datadir/%name/default/local.xml
+%_datadir/%name/*
 
 %changelog
+* Mon Apr 13 2020 Igor Chudov <nir@altlinux.org> 0.2.0-alt1
+- Multiple policy templates introduced
+
 * Wed Feb 12 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.1.0-alt3
 - Update project URL
 
