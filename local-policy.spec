@@ -2,7 +2,7 @@
 
 Name: local-policy
 Version: 0.2.0
-Release: alt3
+Release: alt4
 
 Summary: ALT Local policies
 License: GPLv2+
@@ -48,6 +48,9 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %_datadir/%name/*
 
 %changelog
+* Thu Apr 16 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.2.0-alt4
+- Add empty default local-policy
+
 * Thu Apr 16 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.2.0-alt3
 - Add local-policy sysconfig directory to package
 
