@@ -2,7 +2,7 @@
 
 Name: local-policy
 Version: 0.2.0
-Release: alt2
+Release: alt3
 
 Summary: ALT Local policies
 License: GPLv2+
@@ -36,16 +36,21 @@ done
 
 mkdir -p "%buildroot%_datadir/%name"
 cp -r policies/* "%buildroot%_datadir/%name"
+mkdir -p "%buildroot%_sysconfdir/%name"
 
 %pre
 %_sbindir/groupadd -r -f remote 2> /dev/null ||:
 
 %files
+%dir %_sysconfdir/%name
 %_sysconfdir/control.d/facilities/*
 %dir %_datadir/%name
 %_datadir/%name/*
 
 %changelog
+* Thu Apr 16 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.2.0-alt3
+- Add local-policy sysconfig directory to package
+
 * Thu Apr 16 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.2.0-alt2
 - Add data directory to package
 - Remove default symlink (it is a bad idea to pack it due rpm limitations)
