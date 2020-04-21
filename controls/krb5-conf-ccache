@@ -1,0 +1,43 @@
+#!/bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/krb5.conf
+
+new_subst keyring \
+	'^\s*default_ccache_name\s*=\s*KEYRING:persistent:%{uid}\s*$' \
+	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2KEYRING:persistent:%{uid}/'
+new_subst tmpfile \
+	'^\s*default_ccache_name\s*=\s*FILE:/tmp/krb5cc_%{uid}\s*$' \
+	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2FILE:\/tmp\/krb5cc_%{uid}/'
+new_subst rundir \
+	'^\s*default_ccache_name\s*=\s*DIR:\/run\/user\/%{uid}\/krb5cc\s*$' \
+	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2DIR:\/run\/user\/%{uid}\/krb5cc/'
+new_subst kcm \
+	'^\s*default_ccache_name\s*=\s*KCM:\s*$' \
+	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2KCM:/'
+new_subst default \
+	'^\s*#\s*default_ccache_name\s*=\s*[^#]*# DISABLED_BY_KRB5_CONF_CCACHE_POLICY' \
+	's/^\s*#\?\(\s*default_ccache_name\s*=\s*[^#]*\).*/#\1 # DISABLED_BY_KRB5_CONF_CCACHE_POLICY/g'
+
+new_help default 'Default credential cache (usualy same as temporary file)'
+new_help keyring 'Keyring persistent cache stored in unswappable kernel memory'
+new_help tmpfile 'Traditional, simplest and most portable cache stored in temporary file'
+new_help rundir  'Directory cache stored in run-time variable data'
+new_help kcm     'Kerberos credential manager (requires service like sssd-kcm)'
+
+new_summary 'Kerberos client default credential cache'
+
+test -f "$CONFIG" || exit 2
+
+if ! is_builtin_mode "$1"; then
+	case "$1" in
+	keyring|tmpfile|rundir|kcm|default)
+		if ! grep -q '^\s*#\?\s*default_ccache_name\s*=\s*' "$CONFIG"; then
+			sed -i --follow-symlinks -e 's/^\(\s*\[libdefaults\]\s*\)/\1\n# default_ccache_name = KEYRING:persistent:%{uid} # DISABLED_BY_KRB5_CONF_CCACHE_POLICY/' -- "$CONFIG" || exit 3
+		fi
+		;;
+	esac
+fi
+
+control_subst "$CONFIG" "$*"
