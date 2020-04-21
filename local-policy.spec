@@ -1,8 +1,8 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.2.0
-Release: alt4
+Version: 0.3.0
+Release: alt1
 
 Summary: ALT Local policies
 License: GPLv2+
@@ -27,6 +27,7 @@ templates in PReg format converted to XML.
 for i in sshd-gssapi-auth \
          sshd-allow-groups-list \
          ssh-gssapi-auth \
+         krb5-conf-ccache \
          ldap-reverse-dns-lookup \
          ldap-tls-cert-check
 do
@@ -48,6 +49,16 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %_datadir/%name/*
 
 %changelog
+* Tue Apr 21 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.3.0-alt1
+- Replace machine local Registry policy in Samba backup format
+- krb5-conf-ccache control added for Kerberos client default credential cache:
+ + keyring: Keyring persistent cache stored in unswappable kernel memory
+ + tmpfile: Traditional, simplest and most portable cache stored in temporary file
+ + rundir: Directory cache stored in run-time variable data
+ + kcm: Kerberos credential manager (requires service like sssd-kcm)
+ + default: Default credential cache (usualy same as temporary file)
+- Add ad-domain-controller policy template
+
 * Thu Apr 16 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.2.0-alt4
 - Add empty default local-policy
 
