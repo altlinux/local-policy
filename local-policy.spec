@@ -29,7 +29,8 @@ for i in sshd-gssapi-auth \
          ssh-gssapi-auth \
          krb5-conf-ccache \
          ldap-reverse-dns-lookup \
-         ldap-tls-cert-check
+         ldap-tls-cert-check \
+         autofs-browse-mode
 do
         install -pD -m755 "controls/$i" \
                 "%buildroot%_sysconfdir/control.d/facilities/$i"
