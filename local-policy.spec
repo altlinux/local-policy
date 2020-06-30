@@ -31,6 +31,7 @@ for i in sshd-gssapi-auth \
          ldap-reverse-dns-lookup \
          ldap-tls-cert-check \
          sssd-ad-gpo-ignore-unreadable \
+         sssd-cache-credentials \
          autofs-browse-mode
 do
         install -pD -m755 "controls/$i" \
