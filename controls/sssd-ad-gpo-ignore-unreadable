@@ -1,0 +1,26 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_help disabled 'Deny access SSSD AD users when group policy templates are not readable'
+new_help enabled 'Ignore group policies if theirs attributes in GPT are not readable for SSSD'
+new_help default 'Deny access SSSD AD users when group policy templates are not readable'
+
+new_subst default \
+	'^\s*#\s*ad_gpo_ignore_unreadable\s*=\s*([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])\s*' \
+	's/^\s*#\?\(\s*ad_gpo_ignore_unreadable\)\s*=.*/#\1 = false/'
+
+new_subst enabled \
+	'^\s*ad_gpo_ignore_unreadable\s*=\s*[Tt][Rr][Uu][Ee]\s*' \
+	's/^\s*#\?\(\s*ad_gpo_ignore_unreadable\)\s\=.*/\1 = true/'
+
+new_subst disabled \
+	'^\s*ad_gpo_ignore_unreadable\s*=\s*[Ff][Aa][Ll][Ss][Ee]\s*' \
+	's/^\s*#\?\(\s*ad_gpo_ignore_unreadable\)\s*=.*/\1 = false/'
+
+new_summary 'Ignore policy for SSSD if GPO (group policy AD object) templates (GPT) are not readable for SSSD'
+
+control_subst "${CONFIG}" "$*"
+

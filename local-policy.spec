@@ -30,6 +30,7 @@ for i in sshd-gssapi-auth \
          krb5-conf-ccache \
          ldap-reverse-dns-lookup \
          ldap-tls-cert-check \
+         sssd-ad-gpo-ignore-unreadable \
          autofs-browse-mode
 do
         install -pD -m755 "controls/$i" \
