@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.4.0
+Version: 0.4.1
 Release: alt1
 
 Summary: ALT Local policies
@@ -52,6 +52,10 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %_datadir/%name/*
 
 %changelog
+* Wed Jul 01 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.4.1-alt1
+- Add sssd-cache-credentials control
+- Update sssd-ad-gpo-ignore-unreadable control
+
 * Wed Jul 01 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.4.0-alt1
 - Add autofs-browse-mode and sssd-ad-gpo-ignore-unreadable controls
 - Open SSH port by default for all templates
