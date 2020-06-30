@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PolFile num_entries="7" signature="PReg" version="1">
+<PolFile num_entries="8" signature="PReg" version="1">
         <Entry type="4" type_name="REG_DWORD">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>sshd-gssapi-auth</ValueName>
@@ -34,5 +34,10 @@
                 <Key>Software\BaseALT\Policies\SystemdUnits</Key>
                 <ValueName>gpupdate.service</ValueName>
                 <Value>1</Value>
+        </Entry>
+        <Entry type="1" type_name="REG_SZ">
+                <Key>SOFTWARE\Policies\Microsoft\WindowsFirewall\FirewallRules</Key>
+                <ValueName>OpenSSH</ValueName>
+                <Value>v2.20|Action=Allow|Active=TRUE|Dir=In|Protocol=6|LPort=22|Name=Open SSH port|Desc=Open SSH port|</Value>
         </Entry>
 </PolFile>
