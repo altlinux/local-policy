@@ -1,0 +1,31 @@
+#! /bin/sh
+
+. /etc/control.d/functions
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_help disabled 'SSSD GPO-based access control rules are neither evaluated nor enforced'
+new_help enforcing 'SSSD GPO-based access control rules are evaluated and enforced'
+new_help permissive 'SSSD GPO-based access control rules are evaluated, but not enforced'
+new_help default 'SSSD GPO-based access control rules are evaluated and enforced'
+
+new_subst default \
+	'^\s*[#;]?\s*ad_gpo_access_control\s*=\s*([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd]|[Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Vv][Ee]|[Ee][Nn][Ff][Oo][Rr][Cc][Ii][Nn][Gg])\s*' \
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s*=.*/; \1 = enforcing/'
+
+new_subst enforcing \
+	'^\s*ad_gpo_access_control\s*=\s*[Ee][Nn][Ff][Oo][Rr][Cc][Ii][Nn][Gg]\s*' \
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s\=.*/\1 = enforcing/'
+
+new_subst permissive \
+	'^\s*ad_gpo_access_control\s*=\s*[Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Vv][Ee]\s*' \
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s\=.*/\1 = permissive/'
+
+new_subst disabled \
+	'^\s*ad_gpo_access_control\s*=\s*[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd]\s*' \
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s*=.*/\1 = disabled/'
+
+new_summary 'SSSD option specifies the operation mode for GPO-based access control functionality'
+
+control_subst "${CONFIG}" "$*"
+
