@@ -23,5 +23,10 @@ new_help default 'Disable GSSAPI authentication (Single Sign-On feature)'
 
 new_summary 'GSSAPI authentication mechanism in SSHD'
 
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
+
 control_subst "${CONFIG}" "$*"
 
