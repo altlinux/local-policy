@@ -39,6 +39,9 @@ do
                 "%buildroot%_sysconfdir/control.d/facilities/$i"
 done
 
+install -pD -m755 "controls/functions-local-policy" \
+        "%buildroot%_sysconfdir/control.d/"
+
 mkdir -p "%buildroot%_datadir/%name"
 cp -r policies/* "%buildroot%_datadir/%name"
 mkdir -p "%buildroot%_sysconfdir/%name"
@@ -49,6 +52,7 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %files
 %dir %_sysconfdir/%name
 %_sysconfdir/control.d/facilities/*
+%_sysconfdir/control.d/functions-local-policy
 %dir %_datadir/%name
 %_datadir/%name/*
 

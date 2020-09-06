@@ -1,6 +1,6 @@
 #! /bin/sh
 
-. /etc/control.d/functions
+. /etc/control.d/functions-local-policy
 
 CONFIG=/etc/openssh/ssh_config
 
@@ -24,5 +24,5 @@ new_subst enabled \
 	'^[[:space:]]*GSSAPIAuthentication[[:space:]]+yes$' \
 	's/[[:space:]#]*\(GSSAPIAuthentication\)[[:space:]]\+.*/    \1 yes/'
 
-control_subst "${CONFIG}" "$*" || exit 1
+control_subst_with_file_check "$CONFIG" "$*"
 

@@ -1,0 +1,46 @@
+#!/bin/sh
+
+. /etc/control.d/functions
+
+is_status_mode()
+{
+	case "$1" in
+	''|status)
+		return 0
+		;;
+	esac
+	return 1
+}
+
+check_status_mode()
+{
+	if is_status_mode "$1"; then
+		echo "unknown"
+		return 1
+	fi
+}
+
+check_not_builtin_mode()
+{
+	local FILE="$1" REQUEST="$2"
+	if ! is_builtin_mode "$REQUEST"; then
+		echo_error "Configuration file not exists: $FILE"
+		return 1
+	fi
+}
+
+is_file_exists()
+{
+	local FILE="$(readlink -f "$1")"
+	test -f "$FILE"
+}
+
+control_subst_with_file_check()
+{
+	local FILE="$1" REQUEST="$2"
+	if ! is_file_exists "$FILE"; then
+		check_status_mode "$REQUEST" || return 0
+		check_not_builtin_mode "$FILE" "$REQUEST" || return 2
+	fi
+	control_subst "$FILE" "$REQUEST" || return 1
+}

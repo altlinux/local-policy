@@ -1,6 +1,6 @@
 #! /bin/sh
 
-. /etc/control.d/functions
+. /etc/control.d/functions-local-policy
 
 CONFIG=/etc/openssh/sshd_config
 
@@ -23,5 +23,5 @@ new_help default 'Disable GSSAPI authentication (Single Sign-On feature)'
 
 new_summary 'GSSAPI authentication mechanism in SSHD'
 
-control_subst "${CONFIG}" "$*"
+control_subst_with_file_check "$CONFIG" "$*"
 

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-. /etc/control.d/functions
+. /etc/control.d/functions-local-policy
 
 CONFIG=/etc/sssd/sssd.conf
 
@@ -27,5 +27,5 @@ new_subst disabled \
 
 new_summary 'SSSD option specifies the operation mode for GPO-based access control functionality'
 
-control_subst "${CONFIG}" "$*"
+control_subst_with_file_check "$CONFIG" "$*"
 
