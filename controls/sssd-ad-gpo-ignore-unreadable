@@ -22,5 +22,6 @@ new_subst disabled \
 
 new_summary 'Ignore policy for SSSD if GPO (group policy AD object) templates (GPT) are not readable for SSSD'
 
-control_subst_with_file_check "$CONFIG" "$*"
+check_default_sssd_ad_option "$CONFIG" "$*" "ad_gpo_ignore_unreadable" "false" "enabled disabled default" || exit $?
+control_subst_with_file_check "$CONFIG" "$*" "enabled disabled default"
 

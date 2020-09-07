@@ -20,15 +20,6 @@ check_status_mode()
 	fi
 }
 
-check_not_builtin_mode()
-{
-	local FILE="$1" REQUEST="$2"
-	if ! is_builtin_mode "$REQUEST"; then
-		echo_error "Configuration file not exists: $FILE"
-		return 1
-	fi
-}
-
 is_file_exists()
 {
 	local FILE="$(readlink -f "$1")"
@@ -37,10 +28,49 @@ is_file_exists()
 
 control_subst_with_file_check()
 {
-	local FILE="$1" REQUEST="$2"
+	local FILE="$1" REQUEST="$2" VARIANTS=
+	if [ $# -gt 2 ]; then
+		VARIANTS="$3"
+	fi
 	if ! is_file_exists "$FILE"; then
 		check_status_mode "$REQUEST" || return 0
-		check_not_builtin_mode "$FILE" "$REQUEST" || return 2
+		if ! is_builtin_mode "$REQUEST"; then
+			if test -z "$VARIANTS" || echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+				echo_error "Configuration file not exists: $FILE"
+				return 2
+			fi
+		fi
 	fi
 	control_subst "$FILE" "$REQUEST" || return 1
+}
+
+_check_default_sssd_option()
+{
+	local SECTION="$1" PROVIDER="$2"; shift 2
+	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5"
+	if is_file_exists "$FILE" && ! is_builtin_mode "$REQUEST"; then
+		if echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+			if ! grep -q "^\s*[#;]\?\s*$OPTION\s*=\s*" "$FILE"; then
+				if test -n "$PROVIDER" && ! grep -q "^\s*id_provider\s*=\s*$PROVIDER$" "$FILE"; then
+					case "$PROVIDER" in
+						ad) PROVIDER="Active Directory" ;;
+						ipa) PROVIDER="Free IPA" ;;
+					esac
+					echo_error "Option '$OPTION' not exists for not initialized $PROVIDER provider"
+					return 4
+				fi
+				sed -i --follow-symlinks -e "s/^\(\s*\[$SECTION\]\s*\)/\1\n#$OPTION = $DEFAULT/" -- "$FILE" || return 3
+			fi
+		fi
+	fi
+}
+
+check_default_sssd_ad_option()
+{
+	_check_default_sssd_option 'domain\/.*' 'ad' "$@"
+}
+
+check_default_sssd_domain_option()
+{
+	_check_default_sssd_option 'domain\/.*' '' "$@"
 }
