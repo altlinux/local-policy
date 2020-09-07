@@ -22,5 +22,10 @@ new_subst disabled \
 
 new_summary 'Ignore policy for SSSD if GPO (group policy AD object) templates (GPT) are not readable for SSSD'
 
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
+
 control_subst "${CONFIG}" "$*"
 

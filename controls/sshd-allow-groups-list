@@ -24,4 +24,9 @@ new_help remoteonly 'Allow SSH Access to group remote only'
 
 new_summary 'OpenSSH server list of allowed groups configuration'
 
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
+
 control_subst "$CONFIG" "$*"

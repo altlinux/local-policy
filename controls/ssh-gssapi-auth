@@ -24,5 +24,10 @@ new_subst enabled \
 	'^[[:space:]]*GSSAPIAuthentication[[:space:]]+yes$' \
 	's/[[:space:]#]*\(GSSAPIAuthentication\)[[:space:]]\+.*/    \1 yes/'
 
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
+
 control_subst "${CONFIG}" "$*" || exit 1
 

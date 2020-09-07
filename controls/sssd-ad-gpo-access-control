@@ -27,5 +27,10 @@ new_subst disabled \
 
 new_summary 'SSSD option specifies the operation mode for GPO-based access control functionality'
 
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
+
 control_subst "${CONFIG}" "$*"
 

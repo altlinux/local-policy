@@ -28,7 +28,10 @@ new_help kcm     'Kerberos credential manager (requires service like sssd-kcm)'
 
 new_summary 'Kerberos client default credential cache'
 
-test -f "$CONFIG" || exit 2
+if [ ! -e $CONFIG -a "$*" = "status" ]; then
+        echo "unknown"
+        exit 0
+fi
 
 if ! is_builtin_mode "$1"; then
 	case "$1" in
