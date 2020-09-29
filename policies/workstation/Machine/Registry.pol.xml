@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PolFile num_entries="9" signature="PReg" version="1">
+<PolFile num_entries="8" signature="PReg" version="1">
         <Entry type="4" type_name="REG_DWORD">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>sshd-gssapi-auth</ValueName>
@@ -33,11 +33,6 @@
         <Entry type="4" type_name="REG_DWORD">
                 <Key>Software\BaseALT\Policies\SystemdUnits</Key>
                 <ValueName>gpupdate.service</ValueName>
-                <Value>1</Value>
-        </Entry>
-        <Entry type="4" type_name="REG_DWORD">
-                <Key>Software\BaseALT\Policies\SystemdUnits</Key>
-                <ValueName>winbind.service</ValueName>
                 <Value>1</Value>
         </Entry>
         <Entry type="1" type_name="REG_SZ">
