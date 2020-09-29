@@ -15,11 +15,11 @@ new_subst default \
 
 new_subst enforcing \
 	'^\s*ad_gpo_access_control\s*=\s*[Ee][Nn][Ff][Oo][Rr][Cc][Ii][Nn][Gg]\s*' \
-	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s\=.*/\1 = enforcing/'
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s*\=.*/\1 = enforcing/'
 
 new_subst permissive \
 	'^\s*ad_gpo_access_control\s*=\s*[Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Vv][Ee]\s*' \
-	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s\=.*/\1 = permissive/'
+	's/^\s*[#;]\?\s*\(ad_gpo_access_control\)\s*\=.*/\1 = permissive/'
 
 new_subst disabled \
 	'^\s*ad_gpo_access_control\s*=\s*[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd]\s*' \

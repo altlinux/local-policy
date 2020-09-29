@@ -14,7 +14,7 @@ new_subst default \
 
 new_subst enabled \
 	'^\s*ad_gpo_ignore_unreadable\s*=\s*[Tt][Rr][Uu][Ee]\s*' \
-	's/^\s*[#;]\?\s*\(ad_gpo_ignore_unreadable\)\s\=.*/\1 = true/'
+	's/^\s*[#;]\?\s*\(ad_gpo_ignore_unreadable\)\s*\=.*/\1 = true/'
 
 new_subst disabled \
 	'^\s*ad_gpo_ignore_unreadable\s*=\s*[Ff][Aa][Ll][Ss][Ee]\s*' \
