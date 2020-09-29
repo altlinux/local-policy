@@ -1,0 +1,51 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/samba/smb.conf
+
+BACKENDSDIR=/usr/lib*/samba/idmap/
+BACKENDSLIST="tdb"
+
+new_summary 'Samba winbind idmap configuration backend for all domains'
+
+smbconf_helpstring()
+{
+	case "$1" in
+	*)
+		echo "Samba winbind used '$1' idmap backend for all domains"
+	esac
+}
+
+for f in $BACKENDSDIR/*.so; do
+	d="${f%/*}"
+	v="${f#$d/}"
+	v="${v%.so}"
+
+	# check whether backends directory and configuration file exist
+	if [ ! -d "$d" -o ! -f "$f" ]; then
+		continue
+	fi
+
+	new_help "$v" "$(smbconf_helpstring $v)"
+	BACKENDSLIST="$BACKENDSLIST $v"
+done
+
+new_help tdb "Samba winbind used 'tdb' idmap backend for all domains"
+new_help default "Samba winbind used default idmap backend for all domains"
+
+REQUEST="$*"
+
+new_subst default \
+	'^\s*[#;]\s*idmap\s+config\s+\*\s*:\s*backend\s*=' \
+	's/^\(\s*[#;]\)\?\(\s*idmap\s\+config\s\+\*\s*:\s*backend\)\s*=.*/#\2 = tdb/'
+
+for b in $BACKENDSLIST; do
+	new_subst $b \
+		"^\s*idmap\s+config\s+\*\s*:\s*backend\s*=\s*$b\s*" \
+		"s/^\(\s*[#;]\)\?\(\s*idmap\s\+config\s\+\*\s*:\s*backend\)\s*=.*/\2 = $b/"
+done
+
+check_default_option_with_section "global" "$CONFIG" "$REQUEST" 'idmap config \* : backend' "tdb" "$BACKENDSLIST" || exit $?
+control_subst_with_file_check "$CONFIG" "$REQUEST" "$BACKENDSLIST"
+

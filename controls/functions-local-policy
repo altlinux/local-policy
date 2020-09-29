@@ -44,6 +44,19 @@ control_subst_with_file_check()
 	control_subst "$FILE" "$REQUEST" || return 1
 }
 
+check_default_option_with_section()
+{
+	local SECTION="$1"; shift 1
+	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5"
+	if is_file_exists "$FILE" && ! is_builtin_mode "$REQUEST"; then
+		if echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+			if ! grep -q "^\s*[#;]\?\s*$OPTION\s*=\s*" "$FILE"; then
+				sed -i --follow-symlinks -e "s/^\(\s*\[$SECTION\]\s*\)/\1\n#$OPTION = $DEFAULT/" -- "$FILE" || return 3
+			fi
+		fi
+	fi
+}
+
 _check_default_sssd_option()
 {
 	local SECTION="$1" PROVIDER="$2"; shift 2
