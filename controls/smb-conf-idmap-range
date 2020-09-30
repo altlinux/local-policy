@@ -1,0 +1,27 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/samba/smb.conf
+
+new_summary 'Samba winbind idmap configuration range for all domains'
+
+new_help disabled "Samba winbind idmap range not configured for all domains"
+new_help RANGE "Samba winbind used 'LOW-HIGH' idmap range for all domains (for example, sssd-ad default is '200000-2000200000')"
+
+REQUEST="$*"
+
+new_subst disabled \
+	'^\s*[#;]\s*idmap\s+config\s+\*\s*:\s*range\s*=' \
+	's/^\(\s*[#;]\)\?\(\s*idmap\s\+config\s\+\*\s*:\s*range\)\s*=.*/#\2 = 200000-2000200000/'
+
+check_default_option_with_section "global" "$CONFIG" "$REQUEST" \
+	'idmap config \* : range' "200000-2000200000" "disabled" \
+	'^[[:digit:]]+-[[:digit:]]+$' || exit $?
+
+control_subst_with_file_check "$CONFIG" "$REQUEST" "disabled" \
+	'^[[:digit:]]+-[[:digit:]]+$' \
+	"s/^\(\s*[#;]\)\?\(\s*idmap\s\+config\s\+\*\s*:\s*range\)\s*=.*/\2 = $REQUEST/" \
+	'\s*idmap\s+config\s+\*\s*:\s*range\s*=\s*[^[:space:]]*\s*$' \
+	's/^\s*idmap\s\+config\s\+\*\s*:\s*range\s*=\s*\([^[:space:]]*\)\s*$/\1/'
+

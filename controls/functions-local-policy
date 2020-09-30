@@ -26,30 +26,69 @@ is_file_exists()
 	test -f "$FILE"
 }
 
+_check_variants()
+{
+	local RETVAL=1
+	if test -n "$2" && echo "$2" | grep -q -w "$1"; then
+		RETVAL=0
+	else
+		if test -n "${3-}" && echo "$1" | grep -Eq "$3"; then
+			RETVAL=0
+		fi
+	fi
+	return $RETVAL
+}
+
+_control_subst_status_regexp()
+{
+	local FILE="$1" REGEXP_STATUS="$2" SUBST_STATUS="$3"
+	if ! grep -E "$REGEXP_STATUS" "$FILE"; then
+		echo "unknown"
+		return
+	fi | head -1 | (test -z "$SUBST_STATUS" || sed --follow-symlinks -e "$SUBST_STATUS")
+}
+
 control_subst_with_file_check()
 {
-	local FILE="$1" REQUEST="$2" VARIANTS=
-	if [ $# -gt 2 ]; then
-		VARIANTS="$3"
-	fi
+	local FILE="$1" REQUEST="$2" VARIANTS="${3-}" REGEXP="${4-}" SUBST="${5-}" REGEXP_STATUS="${6-}" SUBST_STATUS="${7-}"
 	if ! is_file_exists "$FILE"; then
 		check_status_mode "$REQUEST" || return 0
 		if ! is_builtin_mode "$REQUEST"; then
-			if test -z "$VARIANTS" || echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+			if _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
 				echo_error "Configuration file not exists: $FILE"
-				return 2
+			else
+				echo_error "Invalid mode: $REQUEST"
 			fi
+			return 2
+		fi
+	fi
+	if is_status_mode "$REQUEST"; then
+		if ! _check_variants "$(control_subst_status "$FILE")" "$VARIANTS" && test -n "$REGEXP_STATUS"; then
+			STATUS="$(_control_subst_status_regexp "$FILE" "$REGEXP_STATUS" "$SUBST_STATUS")"
+			_check_variants "$STATUS" "" "$REGEXP" &&
+				echo "$STATUS" || echo "unknown"
+			return
+		fi
+	elif ! is_builtin_mode "$REQUEST"; then
+		if ! _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
+			echo_error "Invalid mode: $REQUEST"
+			return 1
+		fi
+		if ! _check_variants "$REQUEST" "$VARIANTS" && test -n "$SUBST"; then
+			sed -i --follow-symlinks -e "$SUBST" -- "$FILE"
+			return $?
 		fi
 	fi
 	control_subst "$FILE" "$REQUEST" || return 1
 }
 
+
 check_default_option_with_section()
 {
 	local SECTION="$1"; shift 1
-	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5"
+	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5" REGEXP="${6-}"
 	if is_file_exists "$FILE" && ! is_builtin_mode "$REQUEST"; then
-		if echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+		if _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
 			if ! grep -q "^\s*[#;]\?\s*$OPTION\s*=\s*" "$FILE"; then
 				sed -i --follow-symlinks -e "s/^\(\s*\[$SECTION\]\s*\)/\1\n#$OPTION = $DEFAULT/" -- "$FILE" || return 3
 			fi
@@ -62,7 +101,7 @@ _check_default_sssd_option()
 	local SECTION="$1" PROVIDER="$2"; shift 2
 	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5"
 	if is_file_exists "$FILE" && ! is_builtin_mode "$REQUEST"; then
-		if echo "$VARIANTS" | grep -q -w "$REQUEST"; then
+		if _check_variants "$REQUEST" "$VARIANTS"; then
 			if ! grep -q "^\s*[#;]\?\s*$OPTION\s*=\s*" "$FILE"; then
 				if test -n "$PROVIDER" && ! grep -q "^\s*id_provider\s*=\s*$PROVIDER$" "$FILE"; then
 					case "$PROVIDER" in
