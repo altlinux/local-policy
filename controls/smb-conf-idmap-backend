@@ -46,6 +46,8 @@ for b in $BACKENDSLIST; do
 		"s/^\(\s*[#;]\)\?\(\s*idmap\s\+config\s\+\*\s*:\s*backend\)\s*=.*/\2 = $b/"
 done
 
+BACKENDSLIST="default $BACKENDSLIST"
+
 check_default_option_with_section "global" "$CONFIG" "$REQUEST" 'idmap config \* : backend' "tdb" "$BACKENDSLIST" || exit $?
 control_subst_with_file_check "$CONFIG" "$REQUEST" "$BACKENDSLIST"
 
