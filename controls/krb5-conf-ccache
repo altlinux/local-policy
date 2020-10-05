@@ -38,4 +38,4 @@ if ! is_file_exists "$CONFIG" && ! is_builtin_mode "$1"; then
 	esac
 fi
 
-control_subst_with_file_check "$CONFIG" "$*"
+control_subst_with_file_check "$CONFIG" "$*" "default keyring tmpfile rundir kcm"

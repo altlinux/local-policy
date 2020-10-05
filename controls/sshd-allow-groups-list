@@ -24,4 +24,4 @@ new_help remoteonly 'Allow SSH Access to group remote only'
 
 new_summary 'OpenSSH server list of allowed groups configuration'
 
-control_subst_with_file_check "$CONFIG" "$*"
+control_subst_with_file_check "$CONFIG" "$*" "users remote wheelonly remoteonly"

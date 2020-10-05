@@ -23,5 +23,5 @@ new_help default 'Disable GSSAPI authentication (Single Sign-On feature)'
 
 new_summary 'GSSAPI authentication mechanism in SSHD'
 
-control_subst_with_file_check "$CONFIG" "$*"
+control_subst_with_file_check "$CONFIG" "$*" "disabled enabled default"
 
