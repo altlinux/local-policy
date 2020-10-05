@@ -54,7 +54,7 @@ control_subst_with_file_check()
 	if ! is_file_exists "$FILE"; then
 		check_status_mode "$REQUEST" || return 0
 		if ! is_builtin_mode "$REQUEST"; then
-			if _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
+			if test $# -le 2 || _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
 				echo_error "Configuration file not exists: $FILE"
 			else
 				echo_error "Invalid mode: $REQUEST"
@@ -62,14 +62,14 @@ control_subst_with_file_check()
 			return 2
 		fi
 	fi
-	if is_status_mode "$REQUEST"; then
+	if is_status_mode "$REQUEST" && test $# -gt 2; then
 		if ! _check_variants "$(control_subst_status "$FILE")" "$VARIANTS" && test -n "$REGEXP_STATUS"; then
 			STATUS="$(_control_subst_status_regexp "$FILE" "$REGEXP_STATUS" "$SUBST_STATUS")"
 			_check_variants "$STATUS" "" "$REGEXP" &&
 				echo "$STATUS" || echo "unknown"
 			return
 		fi
-	elif ! is_builtin_mode "$REQUEST"; then
+	elif ! is_builtin_mode "$REQUEST" && test $# -gt 2; then
 		if ! _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
 			echo_error "Invalid mode: $REQUEST"
 			return 1
