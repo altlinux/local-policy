@@ -99,14 +99,15 @@ check_default_option_with_section()
 _check_default_sssd_option()
 {
 	local SECTION="$1" PROVIDER="$2"; shift 2
-	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5"
+	local FILE="$1" REQUEST="$2" OPTION="$3" DEFAULT="$4" VARIANTS="$5" REGEXP="${6-}"
 	if is_file_exists "$FILE" && ! is_builtin_mode "$REQUEST"; then
-		if _check_variants "$REQUEST" "$VARIANTS"; then
+		if _check_variants "$REQUEST" "$VARIANTS" "$REGEXP"; then
 			if ! grep -q "^\s*[#;]\?\s*$OPTION\s*=\s*" "$FILE"; then
 				if test -n "$PROVIDER" && ! grep -q "^\s*id_provider\s*=\s*$PROVIDER$" "$FILE"; then
 					case "$PROVIDER" in
 						ad) PROVIDER="Active Directory" ;;
-						ipa) PROVIDER="Free IPA" ;;
+						ipa) PROVIDER="FreeIPA" ;;
+						'ad\|ipa') PROVIDER="Active Directory or FreeIPA" ;;
 					esac
 					echo_error "Option '$OPTION' not exists for not initialized $PROVIDER provider"
 					return 4
@@ -120,6 +121,16 @@ _check_default_sssd_option()
 check_default_sssd_ad_option()
 {
 	_check_default_sssd_option 'domain\/.*' 'ad' "$@"
+}
+
+check_default_sssd_ipa_option()
+{
+	_check_default_sssd_option 'domain\/.*' 'ipa' "$@"
+}
+
+check_default_sssd_ad_ipa_option()
+{
+	_check_default_sssd_option 'domain\/.*' 'ad\|ipa' "$@"
 }
 
 check_default_sssd_domain_option()
