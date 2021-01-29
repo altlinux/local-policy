@@ -1,0 +1,26 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_help disabled 'Disable automatically update DNS server with the PTR record using SSSD'
+new_help enabled 'Enable automatically update DNS server with the PTR record using SSSD'
+new_help default 'Enable automatically update DNS server with the PTR record using SSSD by default'
+
+new_subst default \
+	'^\s*[#;]?[#; ]\s*dyndns_update_ptr\s*=\s*([Ff][Aa][Ll][Ss][Ee]|[Tt][Rr][Uu][Ee])\s*' \
+	's/^\s*[#;]\?\s*\(dyndns_update_ptr\)\s*=.*/; \1 = true/'
+
+new_subst enabled \
+	'^\s*dyndns_update_ptr\s*=\s*[Tt][Rr][Uu][Ee]\s*' \
+	's/^\s*[#;]\?\s*\(dyndns_update_ptr\)\s*\=.*/\1 = true/'
+
+new_subst disabled \
+	'^\s*dyndns_update_ptr\s*=\s*[Ff][Aa][Ll][Ss][Ee]\s*' \
+	's/^\s*[#;]\?\s*\(dyndns_update_ptr\)\s*=.*/\1 = false/'
+
+new_summary 'SSSD option specifies the automatically update DNS server (secured using GSS-TSIG) with the PTR record of this client, when dyndns update in enabled'
+
+check_default_sssd_ad_ipa_option "$CONFIG" "$*" "dyndns_update_ptr" "disabled" "enabled disabled default" || exit $?
+control_subst_with_file_check "$CONFIG" "$*" "enabled disabled default"

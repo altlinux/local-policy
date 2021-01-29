@@ -1,0 +1,26 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_summary 'Determines the TTL of client DNS record, when dyndns update by SSSD in enabled'
+
+new_help disabled "Disable setting the TTL value of client DNS record updated by SSSD (using serveside defaults)"
+new_help TTL "Set the TTL value of client DNS record updated by SSSD in seconds (default is 1200 or 3600 for Active Directory)"
+
+REQUEST="$*"
+
+new_subst disabled \
+	'^\s*[#;]\s*dyndns_ttl\s*=' \
+	's/^\(\s*[#;]\)\?\(\s*dyndns_ttl\)\s*=.*/;\2 = 3600/'
+
+check_default_sssd_ad_ipa_option "$CONFIG" "$REQUEST" \
+	'dyndns_ttl' '3600' "disabled" \
+	'^[[:digit:]]+$' || exit $?
+
+control_subst_with_file_check "$CONFIG" "$REQUEST" "disabled" \
+	'^[[:digit:]]+$' \
+	"s/^\(\s*[#;]\)\?\(\s*dyndns_ttl\)\s*=.*/\2 = $REQUEST/" \
+	'\s*dyndns_ttl\s*=\s*[^[:space:]]*\s*$' \
+	's/^\s*dyndns_ttl\s*=\s*\([^[:space:]]*\)\s*$/\1/'

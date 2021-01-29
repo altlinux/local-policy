@@ -34,6 +34,10 @@ for i in sshd-gssapi-auth \
          sssd-ad-gpo-access-control \
          sssd-ad-gpo-ignore-unreadable \
          sssd-cache-credentials \
+         sssd-dyndns-update \
+         sssd-dyndns-update-ptr \
+         sssd-dyndns-refresh-interval \
+         sssd-dyndns-ttl \
          autofs-browse-mode \
          smb-conf-idmap-backend \
          smb-conf-idmap-range

@@ -1,0 +1,26 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_summary 'Determines how often should the back end perform periodic DNS records update, when dyndns update by SSSD in enabled'
+
+new_help disabled "Disable setting additional refresh interval of client DNS records updated by SSSD"
+new_help INTERVAL "Set the value of refresh interval DNS records updated by SSSD in seconds (the lowest possible value is 60, default is 86400 - 24 hours)"
+
+REQUEST="$*"
+
+new_subst disabled \
+	'^\s*[#;]\s*dyndns_refresh_interval\s*=*' \
+	's/^\(\s*[#;]\)\?\(\s*dyndns_refresh_interval\)\s*=.*/;\2 = 86400/'
+
+check_default_sssd_ad_ipa_option "$CONFIG" "$REQUEST" \
+	'dyndns_refresh_interval' '86400' "disabled" \
+	'^[[:digit:]]+$' || exit $?
+
+control_subst_with_file_check "$CONFIG" "$REQUEST" "disabled" \
+	'^[[:digit:]]+$' \
+	"s/^\(\s*[#;]\)\?\(\s*dyndns_refresh_interval\)\s*=.*/\2 = $REQUEST/" \
+	'\s*dyndns_refresh_interval\s*=\s*[^[:space:]]*\s*$' \
+	's/^\s*dyndns_refresh_interval\s*=\s*\([^[:space:]]*\)\s*$/\1/'
