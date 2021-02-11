@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.4.6
+Version: 0.4.7
 Release: alt1
 
 Summary: ALT Local policies
@@ -64,6 +64,9 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %_datadir/%name/*
 
 %changelog
+* Fri Jan 29 2021 Evgeny Sinelnikov <sin@altlinux.org> 0.4.7-alt1
+- Add sssd-dyndns-{update,update-ptr,refresh-interval,ttl} controls
+
 * Mon Oct 05 2020 Evgeny Sinelnikov <sin@altlinux.org> 0.4.6-alt1
 - Fix control_subst_with_file_check regression and improve default
   variants of controls facilities use it
