@@ -1,0 +1,26 @@
+#! /bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/sssd/sssd.conf
+
+new_help unprivileged 'SSSD running from unprivileged user (as the _sssd user)'
+new_help privileged 'SSSD running from privileged user (as the root user)'
+new_help default 'SSSD running from default user (different in various versions)'
+
+new_subst default \
+	'^\s*[#;]?[#; ]\s*user\s*=\s*([[:alpha:]]?[[:alnum:]]*)\s*' \
+	's/^\s*[#;]\?\s*\(user\)\s*=.*/; \1 = _sssd/'
+
+new_subst unprivileged \
+	'^\s*user\s*=\s*_sssd\s*' \
+	's/^\s*[#;]\?\s*\(user\)\s*\=.*/\1 = _sssd/'
+
+new_subst privileged \
+	'^\s*user\s*=\s*root\s*' \
+	's/^\s*[#;]\?\s*\(user\)\s*\=.*/\1 = root/'
+
+new_summary "SSSD option drops the user\'s privileges to where appropriate to avoid running as the root user."
+
+check_default_option_with_section "sssd" "$CONFIG" "$*" "user" "unprivileged" "unprivileged privileged default" || exit $?
+control_subst_with_file_check "$CONFIG" "$*" "unprivileged privileged default"

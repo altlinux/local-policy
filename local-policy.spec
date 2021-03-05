@@ -34,6 +34,7 @@ for i in sshd-gssapi-auth \
          sssd-ad-gpo-access-control \
          sssd-ad-gpo-ignore-unreadable \
          sssd-cache-credentials \
+         sssd-drop-privileges \
          sssd-dyndns-update \
          sssd-dyndns-update-ptr \
          sssd-dyndns-refresh-interval \
