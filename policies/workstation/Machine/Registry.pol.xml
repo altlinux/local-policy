@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PolFile num_entries="8" signature="PReg" version="1">
-        <Entry type="4" type_name="REG_DWORD">
+<PolFile num_entries="9" signature="PReg" version="1">
+        <Entry type="1" type_name="REG_SZ">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>sshd-gssapi-auth</ValueName>
-                <Value>1</Value>
+                <Value>enabled</Value>
         </Entry>
-        <Entry type="4" type_name="REG_DWORD">
+        <Entry type="1" type_name="REG_SZ">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>ssh-gssapi-auth</ValueName>
-                <Value>1</Value>
+                <Value>enabled</Value>
         </Entry>
-        <Entry type="4" type_name="REG_DWORD">
+        <Entry type="1" type_name="REG_SZ">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>sshd-allow-groups</ValueName>
-                <Value>0</Value>
+                <Value>enabled</Value>
         </Entry>
-        <Entry type="4" type_name="REG_DWORD">
+        <Entry type="1" type_name="REG_SZ">
                 <Key>Software\BaseALT\Policies\Control</Key>
                 <ValueName>sshd-allow-groups-list</ValueName>
-                <Value>1</Value>
+                <Value>remote</Value>
+        </Entry>
+        <Entry type="1" type_name="REG_SZ">
+                <Key>Software\BaseALT\Policies\Control</Key>
+                <ValueName>system-policy</ValueName>
+                <Value>gpupdate</Value>
         </Entry>
         <Entry type="4" type_name="REG_DWORD">
                 <Key>Software\BaseALT\Policies\SystemdUnits</Key>
