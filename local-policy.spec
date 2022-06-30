@@ -41,7 +41,8 @@ for i in sshd-gssapi-auth \
          sssd-dyndns-ttl \
          autofs-browse-mode \
          smb-conf-idmap-backend \
-         smb-conf-idmap-range
+         smb-conf-idmap-range \
+         smb-conf-machine-password-timeout
 do
         install -pD -m755 "controls/$i" \
                 "%buildroot%_sysconfdir/control.d/facilities/$i"
