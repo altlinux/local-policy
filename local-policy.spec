@@ -33,6 +33,7 @@ for i in sshd-gssapi-auth \
          ldap-tls-cert-check \
          sssd-ad-gpo-access-control \
          sssd-ad-gpo-ignore-unreadable \
+         sssd-ad-update-machine-password \
          sssd-cache-credentials \
          sssd-drop-privileges \
          sssd-dyndns-update \
