@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 1
 
 Name: local-policy
-Version: 0.5.0
+Version: 0.5.1
 Release: alt1
 
 Summary: ALT Local policies
@@ -67,6 +67,10 @@ mkdir -p "%buildroot%_sysconfdir/%name"
 %_datadir/%name/*
 
 %changelog
+* Mon Jul 04 2022 Ivan Savin <svn17@altlinux.org> 0.5.1-alt1
+- Add control smb-conf-machine-password-timeout
+- Add control sssd-ad-update-machine-password
+
 * Tue Sep 14 2021 Evgeny Sinelnikov <sin@altlinux.org> 0.5.0-alt1
 - Adjust local policy templates
 - Add control system-policy for gpupdate
