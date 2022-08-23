@@ -31,6 +31,7 @@ for i in sshd-gssapi-auth \
          krb5-conf-ccache \
          ldap-reverse-dns-lookup \
          ldap-tls-cert-check \
+         local-policy-system-access \
          sssd-ad-gpo-access-control \
          sssd-ad-gpo-ignore-unreadable \
          sssd-ad-update-machine-password \

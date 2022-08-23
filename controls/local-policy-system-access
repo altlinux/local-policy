@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. /etc/control.d/functions-local-policy
+
+DIRECTORY=/etc/local-policy-system
+
+new_fmode wheelonly 0660 root wheel
+new_dmode wheelonly 02770 root wheel
+new_fmode restricted 0600 root root
+new_dmode restricted 0700 root root
+
+new_help wheelonly "Only wheel users can change $DIRECTORY"
+new_help restricted "Only root can change $DIRECTORY"
+
+new_summary 'Local policy administration control access'
+
+control_dmode "$DIRECTORY" "$*" || exit 1

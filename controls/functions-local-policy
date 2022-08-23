@@ -137,3 +137,85 @@ check_default_sssd_domain_option()
 {
 	_check_default_sssd_option 'domain\/.*' '' "$@"
 }
+
+new_dmode()
+{
+	register "$1"
+	define NAME_TO_DMODE "$1" "$2"
+	define_array DMODE_OWNER_TO_NAME "$2_$3_$4" "$1"
+}
+
+_stat_file()
+{
+	local PATHNAME="$1"
+	[ -z "${PATHNAME##/*}" ] || return 1
+	find "$PATHNAME" -maxdepth 0 -path "$PATHNAME" -printf '%#m_%u_%g'
+}
+
+_control_dmode_status()
+{
+	local DIR="$1" STAT= NAME= ARRAY= ELEM= CAPS=
+
+	STAT="$(_stat_file "$DIR")"
+	if validate "$STAT"; then
+		lookup_array ARRAY DMODE_OWNER_TO_NAME "$STAT"
+		for ELEM in $ARRAY; do
+			eval "NAME=\"\$$ELEM\""
+			lookup CAPS NAME_TO_CAPS "$NAME"
+			if setcap -q -v "$CAPS" "$DIR"; then
+				printf "%s\\n" "$NAME"
+				return
+			fi
+		done
+	fi
+	echo "unknown"
+}
+
+control_dmode()
+{
+	local RET=0 DIR="$1" REQUEST="$2" FMODE= DMODE= OWNER= CAPS=
+
+	case "$REQUEST" in
+	help|'help '*)
+		control_help "${REQUEST#help}"
+		;;
+	list)
+		control_list
+		;;
+	status)
+		_control_dmode_status "$DIR"
+		;;
+	summary)
+		control_summary
+		;;
+	*)
+		if validate "$REQUEST"; then
+			lookup DMODE NAME_TO_DMODE "$REQUEST"
+			lookup FMODE NAME_TO_FMODE "$REQUEST"
+			lookup OWNER NAME_TO_OWNER "$REQUEST"
+			lookup CAPS NAME_TO_CAPS "$REQUEST"
+		fi
+		if [ -z "$DMODE" -o -z "$FMODE" -o -z "$OWNER" ]; then
+			echo_error "Invalid mode: $REQUEST"
+			return 1
+		fi
+		if [ "$(_control_dmode_status "$DIR")" = "$REQUEST" ]; then
+			#[ -n "$(ls -A "$DIR")" ] || return
+			return
+		fi
+		# NOTE: chown will clear all capability sets for the file.
+		# See chown(2) for details.
+		chown -R "$OWNER" "$DIR" || RET=$?
+		find "$DIR" -type f -exec chmod "0$FMODE" {} \; || RET=$?
+		find "$DIR" -type f -exec chmod "$FMODE" {} \; || RET=$?
+		find "$DIR" -type d -exec chmod "0$DMODE" {} \; || RET=$?
+		find "$DIR" -type d -exec chmod "$DMODE" {} \; || RET=$?
+		[ "$RET" = "0" ] || return $RET
+		[ -n "$CAPS" ] || return 0
+		if setcap -q -v "$CAPS" "$DIR"; then
+			return
+		fi
+		setcap -q "$CAPS" "$DIR" || return 1
+		;;
+	esac
+}
