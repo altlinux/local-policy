@@ -11,7 +11,7 @@ new_subst tmpfile \
 	'^\s*default_ccache_name\s*=\s*FILE:/tmp/krb5cc_%{uid}\s*$' \
 	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2FILE:\/tmp\/krb5cc_%{uid}/'
 new_subst rundir \
-	'^\s*default_ccache_name\s*=\s*DIR:\/run\/user\/%{uid}\/krb5cc\s*$' \
+	'^\s*default_ccache_name\s*=\s*DIR:/run/user/%{uid}/krb5cc\s*$' \
 	's/^\(\s*#\)\?\(\s*default_ccache_name\s*=\s*\).*/\2DIR:\/run\/user\/%{uid}\/krb5cc/'
 new_subst kcm \
 	'^\s*default_ccache_name\s*=\s*KCM:\s*$' \
