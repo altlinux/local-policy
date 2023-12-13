@@ -28,7 +28,7 @@ new_help kcm     'Kerberos credential manager (requires service like sssd-kcm)'
 
 new_summary 'Kerberos client default credential cache'
 
-if ! is_file_exists "$CONFIG" && ! is_builtin_mode "$1"; then
+if is_file_exists "$CONFIG" && ! is_builtin_mode "$1"; then
 	case "$1" in
 	keyring|tmpfile|rundir|kcm|default)
 		if ! grep -q '^\s*#\?\s*default_ccache_name\s*=\s*' "$CONFIG"; then
