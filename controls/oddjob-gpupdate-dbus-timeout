@@ -7,15 +7,15 @@ REQUEST="$*"
 
 new_summary 'Determines the dbus_timeout of pam_oddjob_gpupdate PAM module D-Bus request to oddjob service'
 
-new_help default 'Set default dbus_timeout value of D-Bus request'
-new_help dbus_timeout 'Set the dbus_timeout value of D-Bus request in seconds. -1 is a default value (25 seconds)'
+new_help default 'Set default dbus_timeout value of D-Bus request (25 seconds)'
+new_help TIMEOUT 'Set the dbus_timeout value of D-Bus request in seconds'
 
 new_subst default \
-    "^\s*-?session\s*required\s*pam_oddjob_gpupdate.so\s*$" \
-    "s/^\s*\(-\?session\s*required\s*pam_oddjob_gpupdate.so\).*/\1/"
+	"^\s*-?session\s+required\s+pam_oddjob_gpupdate\.so\s*(\sdebug)?\s*$" \
+	"s/^\s*\(-\?session\s\+required\s\+pam_oddjob_gpupdate\.so\)\(.*\(\sdebug\)\)\?.*/\1\3/"
 
 control_subst_with_file_check "$CONFIG" "$REQUEST" "default" \
 	'^[[:digit:]]+$' \
-    "s/^\s*\(-\?session\s*required\s*pam_oddjob_gpupdate.so\).*/\1 dbus_timeout=$REQUEST/" \
-    "^\s*-?session\s*required\s*pam_oddjob_gpupdate.so\s*(dbus_timeout=[[:digit:]]+|)\s*$" \
-    "s/^\s*-\?session\s*required\s*pam_oddjob_gpupdate.so\s\+dbus_timeout=\([[:digit:]]\+\)\s*$/\1/"
+	"s/^\s*\(-\?session\s\+required\s\+pam_oddjob_gpupdate\.so\)\(\(.*\)\?\sdbus_timeout=[^[:space:]]*\)\?\(\s.*\)\?/\1\3 dbus_timeout=$REQUEST\4/" \
+	"^\s*-?session\s+required\s+pam_oddjob_gpupdate\.so.*(\sdbus_timeout=[[:digit:]]+|)(\s.*)?$" \
+	"s/^\s*-\?session\s\+required\s\+pam_oddjob_gpupdate\.so.*\sdbus_timeout=\([[:digit:]]\+\)\(\s.*\)\?$/\1/"
