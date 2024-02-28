@@ -27,3 +27,5 @@ policies/default /usr/share/local-policy/
 policies/server /usr/share/local-policy/
 policies/workstation /usr/share/local-policy/
 policies/ad-domain-controller /usr/share/local-policy/
+
+debian/sshd_config/local-policy.conf /etc/ssh/sshd_config.d/

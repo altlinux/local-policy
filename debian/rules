@@ -1,7 +1,15 @@
 #!/usr/bin/make -f
 #export DH_VERBOSE = 1
 
+DESTDIR=debian/buildroot
+
 %:
-	dh $@ --tmpdir=debian/buildroot
+	dh $@ --tmpdir=$(DESTDIR)
 
 override_dh_installinit:
+
+override_dh_install:
+	dh_install
+	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config.d/local-policy.conf,' $(DESTDIR)/etc/control.d/facilities/sshd-allow-groups-list
+	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/sshd-gssapi-auth
+	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/ssh-gssapi-auth
