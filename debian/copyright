@@ -1,0 +1,11 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: local-policy
+Upstream-Contact: ALT Linux Team development <devel@lists.altlinux.org>
+Source: https://git.altlinux.org/gears/l/local-policy.git
+
+Files: *
+Copyright:
+  Copyright (c) Igor Chudov <nir@altlinux.org> 2019
+  Copyright (c) Evgeny Sinelnikov <nir@altlinux.org> 2019-2024
+  Copyright (c) Andrey Limachko <liannnix@altlinux.org> 2024
+License: GPL-2.0+

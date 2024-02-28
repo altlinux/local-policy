@@ -1,0 +1,29 @@
+controls/functions-local-policy /etc/control.d/
+
+controls/autofs-browse-mode /etc/control.d/facilities/
+controls/functions-local-policy /etc/control.d/facilities/
+controls/krb5-conf-ccache /etc/control.d/facilities/
+controls/ldap-reverse-dns-lookup /etc/control.d/facilities/
+controls/ldap-tls-cert-check /etc/control.d/facilities/
+controls/local-policy-system-access /etc/control.d/facilities/
+controls/oddjob-gpupdate-dbus-timeout /etc/control.d/facilities/
+controls/smb-conf-idmap-backend /etc/control.d/facilities/
+controls/smb-conf-idmap-range /etc/control.d/facilities/
+controls/smb-conf-machine-password-timeout /etc/control.d/facilities/
+controls/sshd-allow-groups-list /etc/control.d/facilities/
+controls/sshd-gssapi-auth /etc/control.d/facilities/
+controls/ssh-gssapi-auth /etc/control.d/facilities/
+controls/sssd-ad-gpo-access-control /etc/control.d/facilities/
+controls/sssd-ad-gpo-ignore-unreadable /etc/control.d/facilities/
+controls/sssd-ad-update-machine-password /etc/control.d/facilities/
+controls/sssd-cache-credentials /etc/control.d/facilities/
+controls/sssd-drop-privileges /etc/control.d/facilities/
+controls/sssd-dyndns-refresh-interval /etc/control.d/facilities/
+controls/sssd-dyndns-ttl /etc/control.d/facilities/
+controls/sssd-dyndns-update /etc/control.d/facilities/
+controls/sssd-dyndns-update-ptr /etc/control.d/facilities/
+
+policies/default /usr/share/local-policy/
+policies/server /usr/share/local-policy/
+policies/workstation /usr/share/local-policy/
+policies/ad-domain-controller /usr/share/local-policy/

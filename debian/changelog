@@ -1,0 +1,5 @@
+local-policy (0.6.3-alt1) unstable; urgency=low
+
+  * Initial build.
+
+ -- Evgeny Sinelnikov <sin@altlinux.org>  Wed, 29 Feb 2024 00:09:10 +0300
