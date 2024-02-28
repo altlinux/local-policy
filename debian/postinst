@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case "$1" in
+	install)
+		/usr/sbin/control local-policy-system-access restricted
+		;;
+	upgrade)
+		/usr/sbin/control-restore local-policy-system-access
+		;;
+esac

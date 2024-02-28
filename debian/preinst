@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if ! getent remote | grep -q "^remote:" ; then
+	addgroup --quiet --system remote 2>/dev/null || true
+fi
+if ! getent wheel | grep -q "^wheel:" ; then
+	addgroup --quiet --system wheel 2>/dev/null || true
+fi
+
+case "$1" in
+	install)
+		[ ! -d "/var/run/control" ] ||
+			echo restricted > "/var/run/control/local-policy-system-access"
+		;;
+	upgrade)
+		/usr/sbin/control-dump local-policy-system-access
+		;;
+esac

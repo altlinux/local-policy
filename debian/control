@@ -9,7 +9,7 @@ Homepage: https://git.altlinux.org/gears/l/local-policy.git
 Package: local-policy
 Architecture: all
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, control
+Depends: ${shlibs:Depends}, ${misc:Depends}, control, libnss-role
 Description: ALT Local Policies Default templates
  Local policies for ALT solutions based on Sisyphus
  includes additional control facilities and default policies

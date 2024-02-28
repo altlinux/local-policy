@@ -29,3 +29,6 @@ policies/workstation /usr/share/local-policy/
 policies/ad-domain-controller /usr/share/local-policy/
 
 debian/sshd_config/local-policy.conf /etc/ssh/sshd_config.d/
+
+debian/roles/localadmins.role /etc/role.d/
+debian/roles/users.role /etc/role.d/
