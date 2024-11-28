@@ -5,17 +5,17 @@
 CONFIG=/etc/openssh/sshd_config
 
 new_subst users \
-	'^#?AllowGroups[[:space:]]wheel[[:space:]]users$' \
-	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel users/'
+	'^[#[:space:]]*AllowGroups\s+wheel\s+users\s*$' \
+	's/^\s*\(#\?\)[#[:space:]]*\(AllowGroups\)\s.*/\1\2 wheel users/'
 new_subst remote \
-	'^#?AllowGroups[[:space:]]wheel[[:space:]]remote$' \
-	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel remote/'
+	'^[#[:space:]]*AllowGroups\s+wheel\s+remote\s*$' \
+	's/^\s*\(#\?\)[#[:space:]]*\(AllowGroups\)\s.*/\1\2 wheel remote/'
 new_subst wheelonly \
-	'^#?AllowGroups[[:space:]]wheel$' \
-	's/^\(#\?AllowGroups[[:space:]]\).*/\1wheel/'
+	'^[#[:space:]]*AllowGroups\s+wheel\s*$' \
+	's/^\s*\(#\?\)[#[:space:]]*\(AllowGroups\)\s.*/\1\2 wheel/'
 new_subst remoteonly \
-	'^#?AllowGroups[[:space:]]remote$' \
-	's/^\(#\?AllowGroups[[:space:]]\).*/\1remote/'
+	'^[#[:space:]]*AllowGroups\s+remote\s*$' \
+	's/^\s*\(#\?\)[#[:space:]]*\(AllowGroups\)\s.*/\1\2 remote/'
 
 new_help users 'Allow SSH Access to groups wheel and users'
 new_help remote 'Allow SSH Access to groups wheel and remote'
