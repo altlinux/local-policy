@@ -30,6 +30,7 @@ templates in PReg format converted to XML.
 %install
 for i in sshd-gssapi-auth \
          sshd-allow-groups-list \
+         sshd-permit-empty-passwords \
          ssh-gssapi-auth \
          krb5-conf-ccache \
          ldap-reverse-dns-lookup \

@@ -12,6 +12,7 @@ controls/smb-conf-idmap-range /etc/control.d/facilities/
 controls/smb-conf-machine-password-timeout /etc/control.d/facilities/
 controls/sshd-allow-groups-list /etc/control.d/facilities/
 controls/sshd-gssapi-auth /etc/control.d/facilities/
+controls/sshd-permit-empty-passwords /etc/control.d/facilities/
 controls/ssh-gssapi-auth /etc/control.d/facilities/
 controls/sssd-ad-gpo-access-control /etc/control.d/facilities/
 controls/sssd-ad-gpo-ignore-unreadable /etc/control.d/facilities/
