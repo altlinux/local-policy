@@ -23,6 +23,7 @@ controls/sssd-dyndns-refresh-interval /etc/control.d/facilities/
 controls/sssd-dyndns-ttl /etc/control.d/facilities/
 controls/sssd-dyndns-update /etc/control.d/facilities/
 controls/sssd-dyndns-update-ptr /etc/control.d/facilities/
+controls/sshd-x11-forwarding /etc/control.d/facilities/
 
 policies/default /usr/share/local-policy/
 policies/server /usr/share/local-policy/

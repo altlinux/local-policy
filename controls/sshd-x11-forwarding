@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /etc/control.d/functions-local-policy
+
+CONFIG=/etc/openssh/sshd_config
+
+new_subst enabled \
+        '^\s*X11Forwarding\s+yes\s*' \
+        's/^[#[:space:]]*\(X11Forwarding\)\s\+.*/\1 yes/'
+
+new_subst disabled \
+        '^\s*X11Forwarding\s+no\s*' \
+        's/^[#[:space:]]*\(X11Forwarding\)\s\+.*/\1 no/'
+
+new_subst default \
+        '^\s*#[#[:space:]]*X11Forwarding\s.*' \
+         's/^[#[:space:]]*\(X11Forwarding\)\s\+.*/#\1 yes/'
+
+new_help enabled 'Permit X11 forwarding'
+new_help disabled 'Prohibit X11 forwarding'
+new_help default 'Reset X11 forwarding to the package default (should be enabled)'
+
+new_summary 'OpenSSH server X11Forwarding configuration'
+
+control_subst_with_file_check "$CONFIG" "$*" "enabled disabled default"
+
+

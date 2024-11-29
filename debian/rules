@@ -12,6 +12,7 @@ override_dh_install:
 	dh_install
 	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config.d/local-policy.conf,' $(DESTDIR)/etc/control.d/facilities/sshd-allow-groups-list
 	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/sshd-gssapi-auth
+	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/sshd-x11-forwarding
 	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/ssh-gssapi-auth
 	sed -i 's,^CONFIG=.*,CONFIG=/etc/ssh/sshd_config,' $(DESTDIR)/etc/control.d/facilities/sshd-permit-empty-passwords
 
